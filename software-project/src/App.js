@@ -1,5 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
+import Post from './Post.js'
+import Header from './components/Header.js';
+import Login from './components/Login';
+import Signup from './components/Signup';
 
 function App() {
   
@@ -7,9 +11,8 @@ function App() {
   
   return (
     <div className="App">
-        <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    
+    <Signup />
     </div>
   );
 }
