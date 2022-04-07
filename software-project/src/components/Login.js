@@ -1,10 +1,38 @@
 import { React, useContext, useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import firebaseContext from '../firebase/firebase';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import app from '../firebase/firebaseConfig';
+import { auth } from '../firebase/firebaseConfig';
+
+
  
 function Login() {
 
-  const handleLogin = () => {};
+  const navigate = useNavigate();
+  const { firebase } = useContext(firebaseContext);
+
+  const [emailAddress, setEmailAddress] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [user, setUser] = useState({});
+
+
+  const handleLogin = async (event) => {
+   
+    event.preventDefault();
+    
+
+    try{
+      await signInWithEmailAndPassword(auth, emailAddress, password);
+        navigate('/signup')
+      }
+    catch(error){
+        console.log("eh");
+        console.log(emailAddress);
+        console.log(password);
+    }
+  };
 
   return (
     <div className="container flex mx-auto max-w-screen-md items-center h-screen grid place-items-center">
@@ -19,11 +47,15 @@ function Login() {
             type="text"
             placeholder="Enter your email address"
             className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
+            onChange={({target}) => setEmailAddress(target.value)}
+            value={emailAddress}
           />
           <input
             type="text"
             placeholder="Enter your password"
             className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
+            onChange={({target}) => setPassword(target.value)}
+            value={password}
           />
           <button
             type="submit"
@@ -31,6 +63,7 @@ function Login() {
           >
             Login
           </button>
+          
         </form>
       </div>
       <div className="flex justify-center items-center flex-col w-full bg-white p-4 rounded border border-gray-primary">

@@ -1,8 +1,44 @@
-import React from 'react'
+import { React, useContext, useState, useEffect } from 'react'
+import { useNavigate, Link } from 'react-router-dom';
+import firebaseContext from '../firebase/firebase';
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import {auth, db} from '../firebase/firebaseConfig';
+import { doc, setDoc, collection, addDoc } from "firebase/firestore";
 
 function Signup() {
 
-  const handleSignup = () => {};
+  const navigate = useNavigate();
+  const { firebase } = useContext(firebaseContext);
+  const [username, setUsername] = useState('');
+  const [emailAddress, setEmailAddress] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSignup = async (event) => {
+
+    event.preventDefault();
+
+    try{
+      const createdUserResult = await createUserWithEmailAndPassword(auth, emailAddress, password);
+      
+
+      const docRef = addDoc(collection(db, "users"), {
+        userId: createdUserResult.user.uid,
+        followers: [],
+        following: [],
+        profilePicture: '',
+        emailAddress: emailAddress,
+        username: username,
+      });
+    
+      console.log("Document written with ID: ", docRef.id);
+    
+  }
+    
+    catch(error){
+      console.log(":/");
+    }
+  };
 
   return (
     <div className="container flex mx-auto max-w-screen-md items-center h-screen grid place-items-center">
@@ -17,16 +53,22 @@ function Signup() {
             type="text"
             placeholder="Enter your username"
             className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
+            onChange={({target}) => setUsername(target.value)}
+            value={username}
           />
           <input
             type="text"
             placeholder="Enter your email address"
             className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
+            onChange={({target}) => setEmailAddress(target.value)}
+            value={emailAddress}
           />
           <input
             type="text"
             placeholder="Enter your password"
             className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
+            onChange={({target}) => setPassword(target.value)}
+            value={password}
           />
           <button
             type="submit"
