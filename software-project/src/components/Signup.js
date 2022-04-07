@@ -32,6 +32,8 @@ function Signup() {
       });
     
       console.log("Document written with ID: ", docRef.id);
+
+      navigate('/view');
     
   }
     
@@ -64,7 +66,7 @@ function Signup() {
             value={emailAddress}
           />
           <input
-            type="text"
+            type="password"
             placeholder="Enter your password"
             className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
             onChange={({target}) => setPassword(target.value)}
@@ -81,7 +83,8 @@ function Signup() {
       <div className="flex justify-center items-center flex-col w-full bg-white p-4 rounded border border-gray-primary">
         <p className="text-sm">
           Already have an account?{` `}
-            Login
+          <Link to="/login" className="font-bold">Login</Link>
+         
         </p>
       </div>
     </div>

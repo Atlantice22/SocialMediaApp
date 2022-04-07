@@ -25,10 +25,9 @@ function Login() {
 
     try{
       await signInWithEmailAndPassword(auth, emailAddress, password);
-        navigate('/signup')
+        navigate('/view')
       }
     catch(error){
-        console.log("eh");
         console.log(emailAddress);
         console.log(password);
     }
@@ -51,7 +50,7 @@ function Login() {
             value={emailAddress}
           />
           <input
-            type="text"
+            type="password"
             placeholder="Enter your password"
             className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
             onChange={({target}) => setPassword(target.value)}
@@ -69,7 +68,7 @@ function Login() {
       <div className="flex justify-center items-center flex-col w-full bg-white p-4 rounded border border-gray-primary">
         <p className="text-sm">
           Don't have an account?{` `}
-            Sign up
+          <Link to="/signup" className="font-bold">Sign up</Link>
         </p>
       </div>
     </div>
