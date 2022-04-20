@@ -14,6 +14,8 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const isInvalid = username === '' || password === '' || emailAddress === '';
+
   const handleSignup = async (event) => {
 
     event.preventDefault();
@@ -33,12 +35,15 @@ function Signup() {
     
       console.log("Document written with ID: ", docRef.id);
 
-      navigate('/view');
+      navigate('/dashboard');
     
   }
     
-    catch(error){
-      console.log(":/");
+    catch (error) {
+      setUsername('');
+      setEmailAddress('');
+      setPassword('');
+      setError(error.message);
     }
   };
 
@@ -49,6 +54,8 @@ function Signup() {
         <h1 className="flex justify-center w-full">
           <img src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png" alt="Instagram" className="mt-2 w-6/12 mb-4" />
         </h1>
+
+        {error && <p className="mb-4 text-xs text-red-primary">{error}</p>}
 
         <form onSubmit={handleSignup} method="POST">
         <input
@@ -73,8 +80,9 @@ function Signup() {
             value={password}
           />
           <button
+            disabled={isInvalid}
             type="submit"
-            className="bg-blue-500 text-white w-full rounded h-8 font-bold"
+            className="bg-blue-500 text-white w-full rounded h-8 font-bold disabled:opacity-50"
           >
             Sign up
           </button>
