@@ -4,9 +4,11 @@ import Feed from './Feed.js'
 
 function View() {
   return (
-    <div className="bg-gray-100 h-screen">
+    <div className="bg-gray-100 h-auto">
     <Header />
+    <div className="bg-gray-100 h-auto items-center">
     <Feed />
+    </div>
     
     </div>
   )
