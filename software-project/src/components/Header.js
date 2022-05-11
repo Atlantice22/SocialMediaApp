@@ -4,7 +4,8 @@ import firebaseContext from '../firebase/firebase';
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 import {auth, db} from '../firebase/firebaseConfig';
 import { doc, setDoc, collection, addDoc } from "firebase/firestore";
-
+import { useRecoilState} from 'recoil';
+import { modalState } from '../atoms/ModalAtom';
 
 function Header() {
 
@@ -13,6 +14,7 @@ function Header() {
   const auth = getAuth();
   const user = auth.currentUser;
   const [users, setUsers] = useState([]);
+  const [open, setOpen] = useRecoilState(modalState);
   
   useEffect(() => {
     const fetchUsers = async () => {
@@ -52,8 +54,8 @@ function Header() {
             </h1>
           
           <h1 className="flex justify-center w-full">
-              
-                <img src="https://cdn-icons-png.flaticon.com/512/5822/5822006.png" alt="Add post" className="h-8   align-middle " />
+             
+                <img src="https://cdn-icons-png.flaticon.com/512/5822/5822006.png" onClick={() => setOpen(true)} alt="Add post" className="h-8   align-middle cursor-pointer" />
               
             </h1>
             <h1 className="flex justify-center w-full">

@@ -1,9 +1,10 @@
 import { React, useContext, useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom';
 import firebaseContext from '../firebase/firebase';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, setPersistence, browserSessionPersistence  } from 'firebase/auth';
 import app from '../firebase/firebaseConfig';
 import { auth } from '../firebase/firebaseConfig';
+
 
 
  
@@ -25,6 +26,7 @@ function Login() {
     
 
     try{
+      
       await signInWithEmailAndPassword(auth, emailAddress, password);
         navigate('/dashboard')
       }
