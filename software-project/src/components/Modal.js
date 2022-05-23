@@ -42,8 +42,9 @@ function Modal() {
                    image: downloadURL
               })
            });
-
+        
           setOpen(false);
+          setCaption(null);
           setLoading(false);
           setSelectedFile(null);
     }

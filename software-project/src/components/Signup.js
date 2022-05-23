@@ -1,7 +1,7 @@
 import { React, useContext, useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom';
 import firebaseContext from '../firebase/firebase';
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, updateProfile } from 'firebase/auth';
 import {auth, db} from '../firebase/firebaseConfig';
 import { doc, setDoc, collection, addDoc } from "firebase/firestore";
 
@@ -22,7 +22,15 @@ function Signup() {
 
     try{
       const createdUserResult = await createUserWithEmailAndPassword(auth, emailAddress, password);
-      
+      await updateProfile(auth.currentUser, {
+        displayName: username, photoURL: "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"
+      }).then(() => {
+        // Profile updated!
+        // ...
+      }).catch((error) => {
+        // An error occurred
+        // ...
+      });
 
       const docRef = addDoc(collection(db, "users"), {
         userId: createdUserResult.user.uid,

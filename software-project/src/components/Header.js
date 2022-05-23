@@ -88,7 +88,7 @@ function Header() {
                 
                 <img
                         className="rounded-full h-10 w-10 flex"
-                        src="https://d-art.ppstatic.pl/kadry/k/r/1/bf/9e/5c42e1d5985fc_o_medium.jpg"
+                        src={user.photoURL}
                         alt="Profile picture"
                         
                       />
