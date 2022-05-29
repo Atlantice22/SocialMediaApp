@@ -1,0 +1,59 @@
+*{
+    box-sizing: border-box ;
+}
+div .profile{
+    display: grid;
+    grid-template-rows: 3fr 7fr 1fr;
+    height: 100vh;
+    grid-template-areas: 
+    'header'
+    'main'
+    'footer';
+}
+.header{
+    display: grid;
+    grid-template-areas: 
+    '... picture picture username edit button ... ... '
+    '... picture picture status status status ... ... '
+    '... ... ... bio bio bio ... ... ';
+
+    
+    justify-items: center;
+}
+.header img{
+    grid-area: picture;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    justify-content: center;
+}
+.header h1{
+    grid-area:username;
+}
+.header .statusInfo{
+    grid-area:status;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header .Bio{
+    grid-area: bio;
+}
+
+
+.container{
+    display: grid;
+    justify-items: center;
+    grid-template-rows: 1fr 8fr;
+}
+
+.images{
+    display: grid;
+    gap:1.5rem;
+    grid-template-columns: repeat(3,1fr);
+    justify-items: center;
+}
+.images img{
+    height:250px;
+    width: 300px;
+}
