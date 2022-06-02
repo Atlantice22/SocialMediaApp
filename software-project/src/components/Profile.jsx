@@ -1,6 +1,8 @@
 import React from 'react'
 import { useNavigate, Link } from 'react-router-dom';
 import profile from '../styles/profile.css'
+import Header from './Header.js'
+import {getAuth} from "firebase/auth"
 
 function Profile() {
   return (
@@ -12,18 +14,18 @@ function Profile() {
             </h1>
           </div>
           */
-
-    <div className='profile'>
-      <header className='header'>
+      <div className='profile'>
+      <Header></Header>
+        <div className='info'>
         <img src="https://d-art.ppstatic.pl/kadry/k/r/1/bf/9e/5c42e1d5985fc_o_medium.jpg" alt='Profile Picture'></img>
         <h1>Username</h1>
-        <div className='statusInfo'>
+        
           <p>Post</p>
           <p>Followers</p>
           <p>Following</p>
-        </div>
+       
         <p className='Bio'>Bio</p>
-      </header>
+      </div>
       <main className='container '>
         <div className='options'>
           <p>grid view</p>

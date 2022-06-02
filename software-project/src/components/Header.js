@@ -85,14 +85,17 @@ function Header() {
                     />
                   </svg>
                 </button>
-                
+                <h1 className="flex justify-center w-full">
+                <Link to={"/profile"}>
+                  
                 <img
                         className="rounded-full h-10 w-10 flex"
                         src={user.photoURL}
-                        alt="Profile picture"
-                        
-                      />
+                        alt="Profile picture"                    
+                        />
               
+                        </Link>
+              </h1>
           </div>
         </div>
       </div>
