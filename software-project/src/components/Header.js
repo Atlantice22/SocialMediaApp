@@ -90,7 +90,7 @@ function Header() {
                   
                 <img
                         className="rounded-full h-10 w-10 flex"
-                        src={user.photoURL}
+                        src={user?.photoURL}
                         alt="Profile picture"                    
                         />
               

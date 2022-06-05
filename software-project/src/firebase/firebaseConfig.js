@@ -26,7 +26,4 @@ const storage = getStorage(app);
 
 const auth = getAuth(app);
 
-setPersistence(auth, browserLocalPersistence);
-
-
 export { app, db, auth, storage };

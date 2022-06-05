@@ -8,30 +8,35 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { lazy } from 'react';
-import userAuth from './user/userAuth';
+import useAuthUser from './user/useAuthUser';
 import userContext from './user/userContext';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import Header from './components/Header';
 
 {/*const Login = lazy(() => import('./components/Login'));*/}
 //const Dashboard = lazy(() => import('./components/Dashboard'));
 
 function App() {
   
-  
+  const user = useAuthUser();
 
   return (
+   <userContext.Provider value={{user}}>
     <RecoilRoot>
     <Router>
     
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route exact path="/" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/upload" element={<PostUpload />} />
+      <Route path="/header" element={<Header />} />
     </Routes>
  
     </Router>
     </RecoilRoot>
+    </userContext.Provider>
   );
 }
 

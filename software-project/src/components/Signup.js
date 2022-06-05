@@ -4,6 +4,7 @@ import firebaseContext from '../firebase/firebase';
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, updateProfile } from 'firebase/auth';
 import {auth, db} from '../firebase/firebaseConfig';
 import { doc, setDoc, collection, addDoc } from "firebase/firestore";
+import { doesUsernameExist } from '../services/firebase';
 
 function Signup() {
 
@@ -19,7 +20,8 @@ function Signup() {
   const handleSignup = async (event) => {
 
     event.preventDefault();
-
+    const usernameExists = await doesUsernameExist(username);
+    if(!usernameExists){
     try{
       const createdUserResult = await createUserWithEmailAndPassword(auth, emailAddress, password);
       await updateProfile(auth.currentUser, {
@@ -53,6 +55,11 @@ function Signup() {
       setPassword('');
       setError(error.message);
     }
+  }
+  else{
+    setUsername('');
+          setError('That username is already taken, please try another.');
+  }
   };
 
   return (
@@ -99,7 +106,7 @@ function Signup() {
       <div className="flex justify-center items-center flex-col w-full bg-white p-4 rounded border border-gray-primary">
         <p className="text-sm">
           Already have an account?{` `}
-          <Link to="/login" className="font-bold">Login</Link>
+          <Link to="/" className="font-bold">Login</Link>
          
         </p>
       </div>
