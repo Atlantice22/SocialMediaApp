@@ -1,30 +1,19 @@
-import { React, useContext, useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom';
-import firebaseContext from '../firebase/firebase';
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
-import {auth, db} from '../firebase/firebaseConfig';
-import { doc, setDoc, collection, addDoc } from "firebase/firestore";
+import { useContext } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { useRecoilState} from 'recoil';
+import FirebaseContext from '../context/firebase';
+import UserContext from '../context/user';
+import * as ROUTES from '../constants/routes';
+import useUser from '../hooks/use-user';
 import { modalState } from '../atoms/ModalAtom';
 
-function Header() {
 
-  const { firebase } = useContext(firebaseContext);
-  const navigate = useNavigate();
-  const auth = getAuth();
-  const user = auth.currentUser;
-  const [users, setUsers] = useState([]);
+export default function Header() {
+  const { user: loggedInUser } = useContext(UserContext);
+  const { user } = useUser(loggedInUser?.uid);
+  const { firebase } = useContext(FirebaseContext);
+  const history = useHistory();
   const [open, setOpen] = useRecoilState(modalState);
-  
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const usersCollection = db.collection('users').get()
-      setUsers(usersCollection.docs.map(doc => {
-        return doc.data()
-      }))
-    }
-    fetchUsers();
-  }, []);
 
   return (
     <header className="h-16 bg-white border-b border-gray-primary mb-8">
@@ -32,44 +21,46 @@ function Header() {
         <div className="flex justify-between h-full">
           <div className="text-gray-700 text-center flex items-center align-items cursor-pointer">
             <h1 className="flex justify-center w-full">
-              <Link to={"/dashboard"}>
-                <img src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png" alt="Home" className="h-8 w-1/8 align-middle " />
+              <Link to={ROUTES.DASHBOARD} aria-label="Instagram logo">
+                <img src="/images/logo.png" alt="Instagram" className="mt-2 w-6/12" />
               </Link>
             </h1>
           </div>
-          
-            <div className="relative mt-1 p-3 rounded-md">
-              <div className="absolute inset-y-0 pl-3 flex items-center pointer-events-none">
-                 {/* <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Search_Icon.svg/500px-Search_Icon.svg.png" classname="h-1 w-1 text-gray-500"/>  */}
-              </div>
-              <input className="bg-gray-50 h-8 block w-full pl-10 sm:text-sm border-gray-30 focus:ring-black focus:border-black rounded-md" type="text" placeholder="Search" />
-            </div>
-          
-          <div className="text-gray-700 text-center flex items-center align-items space-x-6 ">
-
-          <h1 className="flex justify-center w-full">
-              <Link to={"/dashboard"}>
-                <img src="https://cdn-icons-png.flaticon.com/512/63/63633.png?w=360" alt="Home" className="h-8 align-middle " />
-              </Link>
-            </h1>
-          
-          <h1 className="flex justify-center w-full">
-             
-                <img src="https://cdn-icons-png.flaticon.com/512/5822/5822006.png" onClick={() => setOpen(true)} alt="Add post" className="h-8   align-middle cursor-pointer" />
-              
-            </h1>
-            <h1 className="flex justify-center w-full">
-              
-                <img src="https://cdn-icons-png.flaticon.com/512/5883/5883507.png" alt="Messages" className="h-8   align-middle " />
-              
-            </h1>
-
-            
-
-                <button type="button" title="Sign Out" className="font-bold" onClick={() => {
-                    signOut(auth);
-                    navigate("/login");
-                  }}>
+          <input className="bg-gray-50 mt-4 h-8 block  pl-10 sm:text-sm border border-gray-primary rounded-md" type="text" placeholder="Search" />
+          <div className="text-gray-700 text-center flex items-center align-items">
+            {loggedInUser ? (
+              <>
+                <Link to={ROUTES.DASHBOARD} aria-label="Dashboard">
+                  <svg
+                    className="w-8 mr-6 text-black-light cursor-pointer"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                    />
+                  </svg>
+                </Link>
+                
+                <button
+                  type="button"
+                  title="Sign Out"
+                  onClick={() => {
+                    firebase.auth().signOut();
+                    history.push(ROUTES.LOGIN);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      firebase.auth().signOut();
+                      history.push(ROUTES.LOGIN);
+                    }
+                  }}
+                >
                   <svg
                     className="w-8 mr-6 text-black-light cursor-pointer"
                     xmlns="http://www.w3.org/2000/svg"
@@ -85,22 +76,42 @@ function Header() {
                     />
                   </svg>
                 </button>
-                <h1 className="flex justify-center w-full">
-                <Link to={"/profile"}>
-                  
-                <img
-                        className="rounded-full h-10 w-10 flex"
-                        src={user?.photoURL}
-                        alt="Profile picture"                    
-                        />
-              
-                        </Link>
-              </h1>
+                {user && (
+                  <div className="flex items-center cursor-pointer">
+                    <Link to={`/p/${user?.username}`}>
+                      <img
+                        className="rounded-full h-8 w-8 flex"
+                        src={user?.profilePicture}
+                        alt={`${user?.username} profile`}
+                        
+                      />
+                    </Link>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <Link to={ROUTES.LOGIN}>
+                  <button
+                    type="button"
+                    className="bg-blue-medium font-bold text-sm rounded text-white w-20 h-8"
+                  >
+                    Log In
+                  </button>
+                </Link>
+                <Link to={ROUTES.SIGN_UP}>
+                  <button
+                    type="button"
+                    className="font-bold text-sm rounded text-blue-medium w-20 h-8"
+                  >
+                    Sign Up
+                  </button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
     </header>
-  )
+  );
 }
-
-export default Header

@@ -1,19 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-import firebaseContext from './firebase/firebase.js';
-import { app, db } from './firebase/firebaseConfig.js';
+import FirebaseContext from './context/firebase';
+import { firebase, FieldValue } from './lib/firebase';
+import './styles/app.css';
 
 ReactDOM.render(
-  <firebaseContext.Provider value={{app, db}}>
+  <FirebaseContext.Provider value={{ firebase, FieldValue }}>
     <App />
-  </firebaseContext.Provider>,
+  </FirebaseContext.Provider>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

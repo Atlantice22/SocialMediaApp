@@ -1,43 +1,40 @@
-import './App.css';
-import Signup from './components/Signup';
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
-import Profile from './components/Profile';
-import PostUpload from './components/PostUpload';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import ReactLoader from './components/loader';
+import * as ROUTES from './constants/routes';
+import UserContext from './context/user';
+import useAuthListener from './hooks/use-auth-listener';
 
-import { lazy } from 'react';
-import useAuthUser from './user/useAuthUser';
-import userContext from './user/userContext';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import Header from './components/Header';
 
-{/*const Login = lazy(() => import('./components/Login'));*/}
-//const Dashboard = lazy(() => import('./components/Dashboard'));
+import ProtectedRoute from './helpers/protected-route';
 
-function App() {
-  
-  const user = useAuthUser();
+const Login = lazy(() => import('./pages/login'));
+const SignUp = lazy(() => import('./pages/sign-up'));
+const Dashboard = lazy(() => import('./pages/dashboard'));
+const Profile = lazy(() => import('./pages/profile'));
+const NotFound = lazy(() => import('./pages/not-found'));
+
+export default function App() {
+  const { user } = useAuthListener();
 
   return (
-   <userContext.Provider value={{user}}>
-    <RecoilRoot>
-    <Router>
-    
-    <Routes>
-      <Route exact path="/" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/upload" element={<PostUpload />} />
-      <Route path="/header" element={<Header />} />
-    </Routes>
- 
-    </Router>
-    </RecoilRoot>
-    </userContext.Provider>
+    <UserContext.Provider value={{ user }}>
+      <RecoilRoot>
+      <Router>
+        <Suspense fallback={<ReactLoader />}>
+          <Switch>
+            <Route path={ROUTES.LOGIN} component={Login} />
+            <Route path={ROUTES.SIGN_UP} component={SignUp} />
+            <Route path={ROUTES.PROFILE} component={Profile} />
+            <ProtectedRoute user={user} path={ROUTES.DASHBOARD} exact>
+              <Dashboard />
+            </ProtectedRoute>
+            <Route component={NotFound} />
+          </Switch>
+        </Suspense>
+      </Router>
+      </RecoilRoot>
+    </UserContext.Provider>
   );
 }
-
-export default App;
