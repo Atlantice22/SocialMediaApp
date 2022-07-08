@@ -105,7 +105,7 @@ export default function Header({
           )}
         </div>
         <div className="container mt-4">
-          <p className="font-medium">{user?.username ?  <p>Bio</p> : <Skeleton count={1} height={24} /> }</p>
+          <p className="font-medium">{user?.username ?  '' : <Skeleton count={1} height={24} /> }</p>
         </div>
       </div>
     </div>
